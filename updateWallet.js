@@ -51,7 +51,6 @@ const mongoClient = new MongoClient(process.env.CLUSTER2);
 
 const db = mongoClient.db("starbucks");
 const walletsCollection = db.collection("wallets");
-const ordersCollection = db.collection("orders");
 
 // Function to execute the transaction with retry logic
 async function executeTransactionWithRetry() {
@@ -88,10 +87,11 @@ async function executeTransactionWithRetry() {
       
     } catch (error) {
       if (error instanceof MongoError && error.hasErrorLabel('TransientTransactionError')) {
+        console.log(`TransientTransactionError encountered: ${error.errmsg}`);
         // Handle transient error with retry logic
         retryCount++;
         if (retryCount <= maxRetries) {
-          console.log(`TransientTransactionError encountered. Retry attempt ${retryCount}/${maxRetries} in ${retryDelaySec} seconds...`);
+          console.log(`Retry attempt ${retryCount}/${maxRetries} in ${retryDelaySec} seconds...`);
           await clientSession.abortTransaction();
           await sleep(retryDelaySec * 1000); // Convert seconds to milliseconds
           continue; // Retry the transaction

@@ -30,8 +30,10 @@ Create a wallet
 
 ```js
 use("starbucks")
-db.wallets.insertOne({"_id": "A1","balance": 100});
+db.wallets.insertOne({"_id": "A1","balance": 150});
 ```
+
+### Without retry
 
 Run the first transaction
 
@@ -48,12 +50,53 @@ node updateWallet.js --sleep 5000 --walletId A1 --amount 50
 
 When the first transaction is sleeping, in another terminal, run a similar code.
 
-Notice that there is transaction collission, and the 2nd transaction is rejected. There's automatic retry in the code to perform the transaction again.
+Notice that there is transaction collision, and the 2nd transaction is rejected.
+
+```bash
+node updateWallet.js --walletId A1 --amount 50 --maxRetries 0
+
+# TransientTransactionError encountered: Caused by :: Write conflict during plan execution and yielding is disabled. :: Please retry your operation or multi-document transaction.
+# Maximum retry attempts (0) reached. Giving up.
+# MongoDB connection closed
+```
+
+Balance will be `100`
+
+```js
+use("starbucks")
+db.wallets.find({"_id": "A1"});
+
+// {
+//   _id: 'A1',
+//   balance: 100
+// }
+```
+
+
+### With retry
+
+Run the first transaction
+
+```bash
+node updateWallet.js --sleep 5000 --walletId A1 --amount 50
+
+# Update result: {"acknowledged":true,"modifiedCount":1,"upsertedId":null,"upsertedCount":0,"matchedCount":1}
+# updateResult - Sufficient balance for wallet: A1
+# Sleeping for 5000ms before committing...
+# Sleep finished, now committing transaction
+# Transaction committed successfully
+# MongoDB connection closed
+```
+
+When the first transaction is sleeping, in another terminal, run a similar code.
+
+Notice that there is transaction collision, and the 2nd transaction is rejected. But this time, there's automatic retry in the code to perform the transaction again.
 
 ```bash
 node updateWallet.js --walletId A1 --amount 50
 
-# TransientTransactionError encountered. Retry attempt 1/2 in 5 seconds...
+# TransientTransactionError encountered: Caused by :: Write conflict during plan execution and yielding is disabled. :: Please retry your operation or multi-document transaction.
+# Retry attempt 1/2 in 5 seconds...
 # Update result: {"acknowledged":true,"modifiedCount":1,"upsertedId":null,"upsertedCount":0,"matchedCount":1}
 # updateResult - Sufficient balance for wallet: A1
 # Sleeping for 0ms before committing...
@@ -73,6 +116,8 @@ db.wallets.find({"_id": "A1"});
 //   balance: 0
 // }
 ```
+
+### Insufficient Balance
 
 When the balance is 0, running the transaction again will cause the transaction to be aborted.
 
