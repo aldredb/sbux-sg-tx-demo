@@ -231,41 +231,44 @@ There will be an output similar to the following. A HTML report in `k6_reports` 
 
 ```txt
      ✓ status is 200
-     ✓ transaction completed
+     ✓ transaction completed                                                                       
      ✓ transaction succeeded
      ✗ no retries needed
-      ↳  99% — ✓ 2201118 / ✗ 71
+      ↳  99% — ✓ 2201355 / ✗ 44
 
-     checks.........................: 99.99%  ✓ 8804685    ✗ 71     
+     checks.........................: 99.99%  ✓ 8805552    ✗ 44     
      data_received..................: 613 MB  165 kB/s
      data_sent......................: 583 MB  157 kB/s
-     dropped_iterations.............: 811     0.21801/s
-     http_req_blocked...............: min=1.6µs  avg=2.84µs  med=2.6µs   max=388.16µs p(95)=3.82µs  p(99)=5.34µs 
-     http_req_connecting............: min=0s     avg=1ns     med=0s      max=203.45µs p(95)=0s      p(99)=0s     
-   ✓ http_req_duration..............: min=5.55ms avg=10.7ms  med=9.67ms  max=2.03s    p(95)=16.77ms p(99)=26.34ms
-       { expected_response:true }...: min=5.55ms avg=10.7ms  med=9.67ms  max=2.03s    p(95)=16.77ms p(99)=26.34ms
-   ✓ http_req_failed................: 0.00%   ✓ 0          ✗ 2201189
-     http_req_receiving.............: min=9.77µs avg=27.91µs med=26.61µs max=7.41ms   p(95)=39.7µs  p(99)=52.61µs
-     http_req_sending...............: min=5.62µs avg=13.81µs med=14.16µs max=7.41ms   p(95)=20.24µs p(99)=33.23µs
-     http_req_tls_handshaking.......: min=0s     avg=0s      med=0s      max=0s       p(95)=0s      p(99)=0s     
-     http_req_waiting...............: min=5.51ms avg=10.66ms med=9.63ms  max=2.03s    p(95)=16.73ms p(99)=26.29ms
-     http_reqs......................: 2201189 591.716388/s
-     iteration_duration.............: min=5.7ms  avg=10.83ms med=9.8ms   max=2.03s    p(95)=16.9ms  p(99)=26.46ms
-     iterations.....................: 2201189 591.716388/s
-   ✓ transaction_retries............: 71      0.019086/s
-   ✓ transaction_success............: 100.00% ✓ 2201189    ✗ 0      
+     dropped_iterations.............: 600     0.16129/s
+     http_req_blocked...............: min=1.57µs  avg=2.8µs   med=2.57µs  max=309.74µs p(95)=3.72µs  p(99)=5.24µs 
+     http_req_connecting............: min=0s      avg=1ns     med=0s      max=213.89µs p(95)=0s      p(99)=0s     
+   ✓ http_req_duration..............: min=3.86ms  avg=6.83ms  med=6.11ms  max=2.02s    p(95)=10.28ms p(99)=18.03ms
+       { expected_response:true }...: min=3.86ms  avg=6.83ms  med=6.11ms  max=2.02s    p(95)=10.28ms p(99)=18.03ms
+   ✓ http_req_failed................: 0.00%   ✓ 0          ✗ 2201399
+     http_req_receiving.............: min=10.99µs avg=28.3µs  med=26.9µs  max=7.25ms   p(95)=39.66µs p(99)=52.8µs 
+     http_req_sending...............: min=5.53µs  avg=13.47µs med=13.93µs max=2.33ms   p(95)=19.39µs p(99)=32.79µs
+     http_req_tls_handshaking.......: min=0s      avg=0s      med=0s      max=0s       p(95)=0s      p(99)=0s     
+     http_req_waiting...............: min=3.81ms  avg=6.78ms  med=6.06ms  max=2.02s    p(95)=10.23ms p(99)=17.99ms
+     http_reqs......................: 2201399 591.773845/s
+     iteration_duration.............: min=3.99ms  avg=6.95ms  med=6.23ms  max=2.02s    p(95)=10.4ms  p(99)=18.15ms
+     iterations.....................: 2201399 591.773845/s
+   ✓ transaction_retries............: 44      0.011828/s
+   ✓ transaction_success............: 100.00% ✓ 2201399    ✗ 0      
    ✓ transient_errors...............: 0       0/s
-     vus............................: 0       min=0        max=28   
+     vus............................: 0       min=0        max=24   
 
-running (1h02m00.0s), 00/30 VUs, 2201189 complete and 0 interrupted iterations
+running (1h02m00.0s), 00/30 VUs, 2201399 complete and 0 interrupted iterations
+stress_rate ✓ [======================================] 00/30 VUs  1h2m0s  050.09 iters/s
 ```
 
-Metrics from Atlas
+Metrics from Atlas (Note that I enabled full logging on the first secondary, so resource usage in the first secondary is very high)
 
-![alt text](images/README/image.png)
+![alt text](images/README/image1.png)
 
-![alt text](images/README/image-1.png)
+![alt text](images/README/image2.png)
 
-![alt text](images/README/image-2.png)
+![alt text](images/README/image3.png)
 
-![alt text](images/README/image-4.png)
+![alt text](images/README/image4.png)
+
+![alt text](images/README/image5.png)

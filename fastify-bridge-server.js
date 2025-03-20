@@ -193,18 +193,6 @@ fastify.post('/execute-transaction', transactionSchema, async (request, reply) =
   const { walletId, amount, maxRetries = 3, retryDelay = 2, sleep = 0, testId } = request.body;
   
   try {
-    // Get MongoDB client
-    const client = await getMongoClient();
-    const db = client.db("starbucks");
-    const walletsCollection = db.collection("wallets");
-    
-    // Ensure the wallet exists with sufficient balance
-    await walletsCollection.updateOne(
-      { _id: walletId },
-      { $setOnInsert: { balance: 1000 } },
-      { upsert: true }
-    );
-    
     // Execute the transaction with retry logic
     const result = await executeTransactionWithRetry(
       walletId, 
