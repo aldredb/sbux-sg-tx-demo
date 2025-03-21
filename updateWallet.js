@@ -1,4 +1,4 @@
-const { MongoClient, MongoError } = require('mongodb');
+const { MongoClient, MongoError, Double } = require('mongodb');
 const yargs = require('yargs/yargs');
 const { hideBin } = require('yargs/helpers');
 
@@ -61,9 +61,10 @@ async function executeTransactionWithRetry() {
     clientSession.startTransaction();
     
     try {
+      const amount = new Double(amountToDeduct);
       const updateResult = await walletsCollection.updateOne(
-        { _id: walletId, balance: { $gte: amountToDeduct } },
-        { $inc: { balance: -1 * amountToDeduct }},
+        { _id: walletId, balance: { $gte: amount } },
+        { $inc: { balance: -1 * amount }},
         { session: clientSession }
       );
 

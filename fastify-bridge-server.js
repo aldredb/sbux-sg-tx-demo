@@ -2,7 +2,7 @@
 const fastify = require('fastify')({ 
   logger: true
 });
-const { MongoClient, MongoError } = require('mongodb');
+const { MongoClient, MongoError, Double } = require('mongodb');
 const { faker } = require('@faker-js/faker');
 
 // MongoDB connection - Single global instance for optimal connection reuse
@@ -95,10 +95,11 @@ async function executeTransactionWithRetry(walletId, amountToDeduct, maxRetries,
     clientSession.startTransaction();
     
     try {
+      const amount = new Double(amountToDeduct);
       // Deduct the amount from the wallet balance
       const walletUpdateResult = await walletsCollection.updateOne(
-        { _id: walletId, balance: { $gte: amountToDeduct } },
-        { $inc: { balance: -1 * amountToDeduct }},
+        { _id: walletId, balance: { $gte: amount } },
+        { $inc: { balance: -1 * amount }},
         { session: clientSession }
       );
 
@@ -117,7 +118,7 @@ async function executeTransactionWithRetry(walletId, amountToDeduct, maxRetries,
         {
           $set: {
             payment: {
-              method: "wallet", walletId: walletId, amount: amountToDeduct, txDate: new Date()
+              method: "wallet", walletId: walletId, amount: amount, txDate: new Date()
             }
            },
         },

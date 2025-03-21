@@ -30,7 +30,7 @@ Create a wallet
 
 ```js
 use("starbucks")
-db.wallets.insertOne({"_id": "A1","balance": 150});
+db.wallets.insertOne({"_id": "A1","balance": Double("150")});
 ```
 
 ### Without retry
@@ -272,3 +272,30 @@ Metrics from Atlas (Note that I enabled full logging on the first secondary, so 
 ![alt text](images/README/image4.png)
 
 ![alt text](images/README/image5.png)
+
+## Schema Validation
+
+We can additionally restrict the balance from going below 0 by using Schema Validation
+
+```js
+{ 
+  "$jsonSchema": {
+      "required": [ "balance" ],
+      "properties": {
+         "balance": {
+            "bsonType": "double",
+            "description": "must not be less than 0",
+            "minimum": 0,
+         }
+      }
+   }
+}
+```
+
+Modifying the balance to be less than 0 will result in an error
+
+```js
+db.wallets.updateOne({_id: "A1"}, { $set: {balance: -1}});
+
+// MongoServerError: Document failed validation
+```
